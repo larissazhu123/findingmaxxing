@@ -3,3 +3,13 @@ node_modules
 /.next/
 /dist/
 /test/
+node_modules
+.next
+.env
+.env.*
+.vercel
+generated/prisma
+dist
+coverage
+*.tsbuildinfo
+.DS_Store
