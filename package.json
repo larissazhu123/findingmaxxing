@@ -1,6 +1,12 @@
 {
   "dependencies": {
     "@prisma/client": "^6.19.3",
-    "prisma": "^6.19.3"
+    "@supabase/supabase-js": "^2.103.0",
+    "clsx": "^2.1.1",
+    "prisma": "^6.19.3",
+    "tailwind-merge": "^3.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0"
   }
 }
