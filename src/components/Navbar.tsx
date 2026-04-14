@@ -2,10 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { MapPin } from "lucide-react";
 import { GoogleIcon } from "@/components/GoogleIcon";
-
-const handleGoogleSignIn = () => {
-  // Auth is temporarily disabled while DB integration is removed.
-};
+import { handleGoogleSignIn } from "@/lib/googleAuthFetch";
 
 interface NavbarProps {
   className?: string;

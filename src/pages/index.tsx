@@ -1,5 +1,4 @@
 /* eslint-disable react/no-unescaped-entities */
-import Link from "next/link";
 import Head from "next/head";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,10 +22,7 @@ import {
 } from "lucide-react";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { GoogleIcon } from "@/components/GoogleIcon";
-
-const handleGoogleSignIn = () => {
-  // Auth is temporarily disabled while DB integration is removed.
-};
+import { handleGoogleSignIn } from "@/lib/googleAuthFetch";
 
 export default function LandingPage() {
   return (
