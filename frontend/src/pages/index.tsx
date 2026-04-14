@@ -9,24 +9,25 @@ import { ScrollAnimation } from "@/components/ScrollAnimation";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { TestimonialCarousel } from "@/components/TestimonialCarousel";
 import { motion } from "framer-motion";
-import { 
-  Upload, 
-  Search, 
-  MapPin, 
-  Bell, 
-  Zap, 
-  Shield, 
-  Users, 
-  Eye, 
-  Clock, 
-  Check 
+import {
+  Upload,
+  Search,
+  MapPin,
+  Bell,
+  Zap,
+  Shield,
+  Users,
+  Eye,
+  Clock,
+  Check
 } from "lucide-react";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { GoogleIcon } from "@/components/GoogleIcon";
+import {handleGoogleSignIn} from "@/pages/api/user/googleAuthFetch";
 
-const handleGoogleSignIn = () => {
-  // Auth is temporarily disabled while DB integration is removed.
-};
+// const handleGoogleSignIn = () => {
+//   // Auth is temporarily disabled while DB integration is removed.
+// };
 
 export default function LandingPage() {
   return (
@@ -78,17 +79,17 @@ export default function LandingPage() {
 
                 <ScrollAnimation direction="up" delay={0.4}>
                   <div className="flex flex-col sm:flex-row gap-4">
-                    <Button 
-                      size="lg" 
+                    <Button
+                      size="lg"
                       className="gap-2 text-lg px-8 py-6"
                       onClick={handleGoogleSignIn}
                     >
                       <Upload className="h-6 w-6" />
                       Report Found Item
                     </Button>
-                    <Button 
-                      size="lg" 
-                      variant="outline" 
+                    <Button
+                      size="lg"
+                      variant="outline"
                       className="gap-2 text-lg px-8 py-6"
                       onClick={handleGoogleSignIn}
                     >
@@ -135,7 +136,7 @@ export default function LandingPage() {
               {/* Right Column - Image */}
               <ScrollAnimation direction="right" delay={0.3}>
                 <div className="relative">
-                  <motion.div 
+                  <motion.div
                     className="rounded-2xl overflow-hidden shadow-2xl"
                     whileHover={{ scale: 1.02 }}
                     transition={{ duration: 0.3 }}
@@ -147,11 +148,11 @@ export default function LandingPage() {
                     />
                   </motion.div>
                   {/* Floating Card */}
-                  <motion.div 
+                  <motion.div
                     className="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-lg p-6 max-w-xs"
                     initial={{ y: 20, opacity: 0 }}
-                    animate={{ 
-                      y: 0, 
+                    animate={{
+                      y: 0,
                       opacity: 1,
                       scale: [1, 1.05, 1],
                       boxShadow: [
@@ -160,8 +161,8 @@ export default function LandingPage() {
                         "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)"
                       ]
                     }}
-                    transition={{ 
-                      delay: 1.2, 
+                    transition={{
+                      delay: 1.2,
                       duration: 0.6,
                       scale: {
                         duration: 2,
@@ -177,15 +178,15 @@ export default function LandingPage() {
                     whileHover={{ y: -5, scale: 1.02 }}
                   >
                     <div className="flex items-start gap-3">
-                      <motion.div 
+                      <motion.div
                         className="bg-green-100 rounded-full p-3"
-                        animate={{ 
+                        animate={{
                           rotate: [0, 10, -10, 0],
                           scale: [1, 1.1, 1]
                         }}
-                        transition={{ 
-                          duration: 2, 
-                          repeat: Infinity, 
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
                           repeatDelay: 3,
                           scale: {
                             duration: 1.5,
@@ -215,7 +216,7 @@ export default function LandingPage() {
               <div className="text-center mb-20">
                 <h2 className="mb-6 text-4xl lg:text-5xl">How It Works</h2>
                 <p className="text-muted-foreground max-w-2xl mx-auto text-lg lg:text-xl">
-                  FindMaxxing makes it simple to reunite lost items with their owners through 
+                  FindMaxxing makes it simple to reunite lost items with their owners through
                   our intuitive platform designed specifically for the UMass community.
                 </p>
               </div>
@@ -229,12 +230,12 @@ export default function LandingPage() {
                 { icon: Bell, title: "Get Notified", description: "Receive instant alerts when new items are reported in your area." },
               ].map((feature, index) => (
                 <ScrollAnimation key={feature.title} direction="up" delay={0.1 * index}>
-                  <motion.div 
+                  <motion.div
                     className="text-center space-y-5"
                     whileHover={{ y: -10, scale: 1.02 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <motion.div 
+                    <motion.div
                       className="bg-green-100 rounded-full p-5 w-20 h-20 mx-auto flex items-center justify-center"
                       whileHover={{ rotate: 360 }}
                       transition={{ duration: 0.6 }}
@@ -297,8 +298,8 @@ export default function LandingPage() {
                     </div>
                   </li>
                 </ul>
-                <Button 
-                  size="lg" asChild className="gap-2 text-lg px-8 py-6" 
+                <Button
+                  size="lg" asChild className="gap-2 text-lg px-8 py-6"
                   onClick={handleGoogleSignIn}
                 >
                   Explore the Map
@@ -540,7 +541,7 @@ export default function LandingPage() {
                     asChild
                     className="bg-white text-green-600 hover:bg-gray-100 text-lg px-8 py-6"
                     onClick={handleGoogleSignIn}
-            
+
                   >
                     Create Free Account
                   </Button>
@@ -557,7 +558,7 @@ export default function LandingPage() {
                     onClick={handleGoogleSignIn}
                   >
                     <GoogleIcon className="mr-3 h-5 w-5" />
-                  Sign In 
+                  Sign In
                   </Button>
                 </motion.div>
               </div>
