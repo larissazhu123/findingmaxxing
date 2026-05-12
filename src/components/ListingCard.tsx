@@ -1,10 +1,24 @@
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { ListingRow } from "./MapView";
 
-const DEFAULT_IMAGE = "https://jtcmjgoibipkopwsvwdk.supabase.co/storage/v1/object/public/listing-images/listings/findmaxxingfinallogog.png";
+const DEFAULT_IMAGE = "/logo.png";
+// Hosts that belong to deleted Supabase projects. URLs pointing at them are
+// replaced with the local fallback before the browser ever issues the request.
+const DEAD_IMAGE_HOSTS = new Set(["jtcmjgoibipkopwsvwdk.supabase.co"]);
+
+function resolveImageSrc(url: string | null | undefined): string {
+  if (!url) return DEFAULT_IMAGE;
+  try {
+    if (DEAD_IMAGE_HOSTS.has(new URL(url).hostname)) return DEFAULT_IMAGE;
+  } catch {
+    return DEFAULT_IMAGE;
+  }
+  return url;
+}
 
 const CATEGORY_EMOJI_BY_ID: Record<number, string> = {
   1: "🔑", // keys
@@ -44,6 +58,11 @@ export default function ListingCard({
   const categoryEmoji = CATEGORY_EMOJI_BY_ID[categoryId] || "❓";
   const categoryName = CATEGORY_NAMES[categoryId] || "Other";
 
+  const [imgSrc, setImgSrc] = useState(() => resolveImageSrc(pin.image_url));
+  useEffect(() => {
+    setImgSrc(resolveImageSrc(pin.image_url));
+  }, [pin.image_url]);
+
   const formatDate = (dateString: string | null): string => {
     if (!dateString) return "Recently";
     const date = new Date(dateString);
@@ -68,13 +87,14 @@ export default function ListingCard({
       whileHover={{ y: -2, scale: 1.01 }}
       whileTap={{ scale: 0.99 }}
     >
-      {/* Image */}
-      <div className="relative w-full aspect-square">
+      <div className="relative w-full aspect-square bg-green-50">
         <Image
-          src={pin.image_url ?? DEFAULT_IMAGE}
+          src={imgSrc}
           alt={pin.title ?? "Listing image"}
           fill
+          sizes="(max-width: 768px) 100vw, 33vw"
           className="object-cover"
+          onError={() => setImgSrc(DEFAULT_IMAGE)}
         />
       </div>
 
