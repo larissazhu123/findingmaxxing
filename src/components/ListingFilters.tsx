@@ -98,6 +98,7 @@ export function ListingFilters({
 
           <button
             type="button"
+            aria-label={`Sort ${sortOrder === "asc" ? "descending" : "ascending"}`}
             onClick={() =>
               onChangeSortOrder(sortOrder === "asc" ? "desc" : "asc")
             }
