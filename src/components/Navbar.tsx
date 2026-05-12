@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { MapPin } from "lucide-react";
 import { GoogleIcon } from "@/components/GoogleIcon";
 import { handleGoogleSignIn } from "@/lib/googleAuthFetch";
-//import { handleGoogleSignIn } from "@/lib/googleAuthFetch";
 
 interface NavbarProps {
   className?: string;
