@@ -38,19 +38,21 @@ export function ListingFilters({
   onChangeCategoryFilter,
   onChangeTimeFilter,
 }: ListingFiltersProps) {
+  const selectCls =
+    "appearance-none rounded-lg border border-green-300/70 bg-white/90 pl-3 pr-8 py-1.5 text-xs sm:text-sm text-green-900 shadow-sm transition hover:border-green-400 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500 cursor-pointer bg-no-repeat bg-[right_0.5rem_center] bg-[length:1rem] bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%2316a34a%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M5.23%207.21a.75.75%200%200%201%201.06.02L10%2011.06l3.71-3.83a.75.75%200%201%201%201.08%201.04l-4.25%204.39a.75.75%200%200%201-1.08%200L5.21%208.27a.75.75%200%200%201%20.02-1.06Z%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E')]";
+
+  const fieldLabelCls = "text-xs font-medium text-green-800/70 uppercase tracking-wide";
+
   return (
-    <div className="w-full flex flex-wrap items-center gap-3 justify-between rounded-xl border border-green-200 bg-green-50/70 px-3 py-2 mb-4">
-      {/* Left side: label */}
-      <div className="flex items-center gap-2 text-xs sm:text-sm text-green-900">
-        <ListFilter className="h-4 w-4" />
-        <span className="font-medium">Filter &amp; sort listings</span>
+    <div className="w-full flex flex-wrap items-center justify-between gap-4 rounded-xl border border-green-200/60 bg-green-50/80 backdrop-blur-sm shadow-sm px-4 py-3 mb-4">
+      <div className="inline-flex items-center gap-2 rounded-full bg-green-700/95 text-white px-3 py-1.5 text-xs font-medium shadow-sm">
+        <ListFilter className="h-3.5 w-3.5" />
+        <span>Filter &amp; sort</span>
       </div>
 
-      {/* Right side: controls */}
-      <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm">
-        {/* Category filter */}
-        <div className="flex items-center gap-1.5">
-          <span className="text-green-800/80">Category</span>
+      <div className="flex flex-wrap items-center gap-4">
+        <div className="flex items-center gap-2">
+          <span className={fieldLabelCls}>Category</span>
           <select
             value={categoryFilter === "all" ? "all" : String(categoryFilter)}
             onChange={(e) =>
@@ -58,7 +60,7 @@ export function ListingFilters({
                 e.target.value === "all" ? "all" : Number(e.target.value)
               )
             }
-            className="rounded-md border border-green-300 bg-white px-2 py-1 text-xs sm:text-sm text-green-900 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className={selectCls}
           >
             {CATEGORY_OPTIONS.map((opt) => (
               <option key={opt.id} value={String(opt.id)}>
@@ -68,13 +70,12 @@ export function ListingFilters({
           </select>
         </div>
 
-        {/* Time filter */}
-        <div className="flex items-center gap-1.5">
-          <span className="text-green-800/80">Time</span>
+        <div className="flex items-center gap-2">
+          <span className={fieldLabelCls}>Time</span>
           <select
             value={timeFilter}
             onChange={(e) => onChangeTimeFilter(e.target.value as TimeFilter)}
-            className="rounded-md border border-green-300 bg-white px-2 py-1 text-xs sm:text-sm text-green-900 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className={selectCls}
           >
             <option value="all">All</option>
             <option value="1h">Last 1 hr</option>
@@ -83,28 +84,25 @@ export function ListingFilters({
           </select>
         </div>
 
-        {/* Sort controls */}
-        <div className="flex items-center gap-1.5">
-          <span className="text-green-800/80">Sort</span>
-
+        <div className="flex items-center gap-2">
+          <span className={fieldLabelCls}>Sort</span>
           <select
             value={sortBy}
             onChange={(e) => onChangeSortBy(e.target.value as SortBy)}
-            className="rounded-md border border-green-300 bg-white px-2 py-1 text-xs sm:text-sm text-green-900 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className={selectCls}
           >
             <option value="time">Time</option>
             <option value="alpha">Alphabetical</option>
           </select>
-
           <button
             type="button"
             aria-label={`Sort ${sortOrder === "asc" ? "descending" : "ascending"}`}
             onClick={() =>
               onChangeSortOrder(sortOrder === "asc" ? "desc" : "asc")
             }
-            className="inline-flex items-center gap-1 rounded-md border border-green-300 bg-white px-2 py-1 text-xs sm:text-sm text-green-900 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-green-600 text-white px-3 py-1.5 text-xs sm:text-sm font-medium shadow-sm transition hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500/50"
           >
-            <ArrowUpDown className="h-3 w-3" />
+            <ArrowUpDown className="h-3.5 w-3.5" />
             <span>{sortOrder === "asc" ? "Asc" : "Desc"}</span>
           </button>
         </div>
