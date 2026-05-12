@@ -588,7 +588,7 @@ export default function LandingPage() {
                 </ul>
               </div>
               <div className="space-y-4">
-                <h4 className="text-green-600">Team 5</h4>
+                <h4 className="text-green-600">FindMaxxing Team</h4>
                 <ul className="space-y-2">
                   <li className="text-muted-foreground">Alex Shick</li>
                   <li className="text-muted-foreground">Larissa Zhu</li>
@@ -598,7 +598,7 @@ export default function LandingPage() {
             <div className="pt-8 border-t border-gray-200">
               <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                 <p className="text-muted-foreground">
-                  © 2025 FindMaxxing.
+                  © 2026 FindMaxxing.
                 </p>
                 <div className="flex gap-6">
                   <a href="#" className="text-muted-foreground hover:text-green-600">
