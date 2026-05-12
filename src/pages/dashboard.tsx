@@ -5,7 +5,8 @@ import Head from "next/head";
 import { PostLoginNavbar } from "@/components/PostLoginNavbar";
 import ListingCard from "@/components/ListingCard";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, SearchX } from "lucide-react";
+import { motion } from "framer-motion";
 import type { ListingRow } from "@/components/MapView";
 
 import { ListingFilters } from "@/components/ListingFilters";
@@ -109,6 +110,13 @@ export default function DashboardPage() {
     setCurrentPage((prev) => Math.min(totalPages, prev + 1));
   };
 
+  const handleResetFilters = useCallback(() => {
+    setCategoryFilter("all");
+    setTimeFilter("all");
+    setSortBy("time");
+    setSortOrder("desc");
+  }, []);
+
   return (
     <>
       <Head>
@@ -158,11 +166,48 @@ export default function DashboardPage() {
 
           <div className="flex-1 overflow-y-auto px-6 pb-4">
             {filteredAndSortedPins.length === 0 ? (
-              <p className="text-gray-600">
-                {pins.length === 0
-                  ? "No listings yet — add one from the map!"
-                  : "No listings match your filters — try adjusting them!"}
-              </p>
+              pins.length === 0 ? (
+                <p className="text-gray-600">
+                  No listings yet — add one from the map!
+                </p>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.35, ease: "easeOut" }}
+                  className="h-full flex flex-col items-center justify-center text-center px-6"
+                >
+                  <div className="relative mb-6">
+                    <motion.div
+                      aria-hidden
+                      className="absolute inset-0 -m-6 rounded-full bg-green-200/40 blur-2xl"
+                      animate={{ scale: [1, 1.08, 1], opacity: [0.6, 0.9, 0.6] }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                    <motion.div
+                      className="relative h-24 w-24 rounded-full bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center shadow-lg ring-4 ring-green-100"
+                      animate={{ rotate: [0, -4, 4, 0] }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      <SearchX className="h-11 w-11 text-white" strokeWidth={2} />
+                    </motion.div>
+                  </div>
+
+                  <h3 className="text-xl font-semibold text-green-900 mb-2">
+                    No Listings Match Your Filters
+                  </h3>
+                  <p className="text-sm text-green-800/70 max-w-sm mb-6">
+                    Try widening your time range, switching categories, or clearing the filters entirely.
+                  </p>
+                  <Button
+                    variant="outline"
+                    onClick={handleResetFilters}
+                    className="border-green-300 text-green-800 hover:bg-green-100 hover:text-green-900"
+                  >
+                    Reset filters
+                  </Button>
+                </motion.div>
+              )
             ) : (
               <div className="grid grid-cols-3 gap-4">
                 {currentPins.map((p) => (
@@ -179,37 +224,30 @@ export default function DashboardPage() {
 
           {/* Pagination */}
           {filteredAndSortedPins.length > ITEMS_PER_PAGE && (
-            <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-              <div className="text-sm text-gray-600">
-                Showing {startIndex + 1} -{" "}
-                {Math.min(endIndex, filteredAndSortedPins.length)} of{" "}
-                {filteredAndSortedPins.length} listings
+            <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+                className="gap-1"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Previous
+              </Button>
+              <div className="text-sm text-gray-600 px-3">
+                Page {currentPage} of {totalPages}
               </div>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handlePreviousPage}
-                  disabled={currentPage === 1}
-                  className="gap-1"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                  Previous
-                </Button>
-                <div className="text-sm text-gray-600 px-3">
-                  Page {currentPage} of {totalPages}
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleNextPage}
-                  disabled={currentPage === totalPages}
-                  className="gap-1"
-                >
-                  Next
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                className="gap-1"
+              >
+                Next
+                <ChevronRight className="h-4 w-4" />
+              </Button>
             </div>
           )}
         </div>
