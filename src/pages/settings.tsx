@@ -15,42 +15,57 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import {
-  User,
-  Mail,
-  LogOut,
-  Edit2,
-  Calendar,
-  Trophy
-} from "lucide-react";
+import { User, Mail, LogOut, Edit2, Calendar, Trophy } from "lucide-react";
 import { useUser } from "@/context/UserContext";
+import {
+  isDevAuthEnabled,
+  isDevSignedIn,
+  DEV_USER_PROFILE,
+} from "@/lib/devAuth";
+
 type LeaderboardUser = {
   username: string;
   points: number;
 };
+
+const DEV_LEADERBOARD: LeaderboardUser[] = [
+  { username: "Alex", points: 142 },
+  { username: "Larissa", points: 118 },
+  { username: "Mark", points: 96 },
+  { username: "Anirudh", points: 73 },
+  { username: "Saukhya", points: 51 },
+];
+
 export default function SettingsPage() {
   const [nicknameInput, setNicknameInput] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [points, setPoints] = useState(0)
+  const [points, setPoints] = useState(0);
   const [leaderboard, setLeaderboard] = useState<LeaderboardUser[]>([]);
-  const { refreshNickname } = useUser();
+  const { nickname, setNickname, signOut } = useUser();
 
-  // Mock stats
   const userStats = {
-    itemsReported: 12,
-    itemsReturned: 8,
-    joinDate: "September 2024",
+    itemsReported: DEV_USER_PROFILE.itemsReported,
+    itemsReturned: DEV_USER_PROFILE.itemsReturned,
+    joinDate: DEV_USER_PROFILE.joinDate,
   };
 
-  // Fetch user profile
   useEffect(() => {
     const loadProfile = async () => {
+      // Dev-mode fake session: hydrate from the dev profile + UserContext.
+      if (isDevAuthEnabled() && isDevSignedIn()) {
+        setNicknameInput(nickname);
+        setUserEmail(DEV_USER_PROFILE.email);
+        setPoints(DEV_USER_PROFILE.points);
+        setLeaderboard(DEV_LEADERBOARD);
+        setLoading(false);
+        return;
+      }
+
       const { data: { session } } = await supabase.auth.getSession();
       const accessToken = session?.access_token;
       if (!accessToken) {
-        console.warn("No Supabase session found.");
         setLoading(false);
         return;
       }
@@ -64,23 +79,19 @@ export default function SettingsPage() {
         const res = await fetch("/api/user/me", {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
-
         if (!res.ok) throw new Error("Failed to fetch profile");
         const data = await res.json();
 
         setNicknameInput(data.username || "");
         setUserEmail(data.email || "");
-        setPoints(data.points || 0)
+        setPoints(data.points || 0);
 
         const { data: topUsers } = await supabase
-          .from('app_user') 
-          .select('username, points')
-          .order('points', { ascending: false })
+          .from("app_user")
+          .select("username, points")
+          .order("points", { ascending: false })
           .limit(5);
-
-        if (topUsers) {
-          setLeaderboard(topUsers);
-        }
+        if (topUsers) setLeaderboard(topUsers);
       } catch (err) {
         console.error("Error loading user profile:", err);
       } finally {
@@ -88,13 +99,23 @@ export default function SettingsPage() {
       }
     };
     loadProfile();
-  }, []);
+  }, [nickname]);
 
   const handleSaveProfile = async () => {
     setIsEditing(false);
+
+    if (isDevAuthEnabled() && isDevSignedIn()) {
+      await setNickname(nicknameInput);
+      alert("Nickname updated (local, not saved to DB).");
+      return;
+    }
+
     const { data: { session } } = await supabase.auth.getSession();
     const accessToken = session?.access_token;
-    if (!accessToken) return alert("Not authenticated.");
+    if (!accessToken) {
+      await setNickname(nicknameInput);
+      return;
+    }
 
     try {
       const res = await fetch("/api/user/updateNickname", {
@@ -108,7 +129,7 @@ export default function SettingsPage() {
 
       if (res.ok) {
         alert("Nickname updated!");
-        await refreshNickname(); // ✅ Refresh global context
+        await setNickname(nicknameInput);
       } else {
         const err = await res.json();
         alert(`Failed to update nickname: ${err.error || "Unknown error"}`);
@@ -124,7 +145,7 @@ export default function SettingsPage() {
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await signOut();
     window.location.href = "/";
   };
 

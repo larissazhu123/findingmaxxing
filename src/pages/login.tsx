@@ -10,46 +10,17 @@ import { GoogleIcon } from "@/components/GoogleIcon";
 import { Navbar } from "@/components/Navbar";
 import { motion } from "framer-motion";
 import { MapPin, Mail, Lock } from "lucide-react";
-import { supabase } from "@/lib/supabaseClient";
+import { handleGoogleSignIn } from "@/lib/googleAuthFetch";
+import { isDevAuthEnabled, devSignIn } from "@/lib/devAuth";
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleGoogleSignIn = async () => {
-    console.log("Google sign in clicked");
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/callback`,
-      },
-    });
-
-    if (error) {
-      console.error("Error during sign-in:", error.message);
-      return;
-    }
-
-    supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (session) {
-        const userEmail = session.user.email!;
-        const domain = userEmail.split("@")[1].toLowerCase().trim();
-
-        if (domain !== "umass.edu") {
-          await supabase.auth.signOut();
-          alert("Access restricted to umass.edu emails only.");
-          window.location.replace(window.location.origin);
-        } else {
-          window.location.replace("/dashboard");
-        }
-      }
-    });
-  };
-
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login attempt:", { email, password });
+    if (isDevAuthEnabled()) devSignIn();
     router.push("/dashboard");
   };
 

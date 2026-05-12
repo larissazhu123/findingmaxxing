@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabaseClient";
+import { isDevAuthEnabled, devSignIn } from "@/lib/devAuth";
 
 // Stable redirect URL so the value registered in Supabase + Google Cloud doesn't
 // drift when Next.js falls back to a different dev port (3000 → 3002, etc).
@@ -10,6 +11,13 @@ function getRedirectOrigin(): string {
 }
 
 export const handleGoogleSignIn = async () => {
+  // Dev mode: skip the real OAuth round-trip entirely.
+  if (isDevAuthEnabled()) {
+    devSignIn();
+    window.location.replace("/dashboard");
+    return;
+  }
+
   const { error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: { redirectTo: `${getRedirectOrigin()}/callback` },

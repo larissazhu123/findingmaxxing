@@ -317,7 +317,10 @@ export default function MapView({
   const updatePoints = async (pointsGained: number, achievement: string) => { //Takes in the number of points gained and how user gained them
     const { data: { session } } = await supabase.auth.getSession();
     const accessToken = session?.access_token;
-    if (!accessToken) return alert("Not authenticated.");
+    if (!accessToken) {
+      // No real session (e.g. dev test user). Skip the points API silently.
+      return;
+    }
 
     try {
       const res = await fetch("/api/user/updatePoints", {

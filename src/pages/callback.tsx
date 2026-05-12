@@ -1,16 +1,26 @@
 import { useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/router";
+import { isDevAuthEnabled, isDevSignedIn } from "@/lib/devAuth";
 
 export default function CallbackPage() {
   const router = useRouter();
 
   useEffect(() => {
     const handleAuth = async () => {
+      // Dev mode: never went through real OAuth; bounce to the dashboard.
+      if (isDevAuthEnabled() && isDevSignedIn()) {
+        router.replace("/dashboard");
+        return;
+      }
+
       const {
         data: { session },
       } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+        router.replace("/login");
+        return;
+      }
 
       const userEmail = session.user.email!;
       const domain = userEmail.split("@")[1].toLowerCase();
