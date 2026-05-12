@@ -1,6 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import Head from "next/head";
 import { PostLoginNavbar } from "@/components/PostLoginNavbar";
 import ListingCard from "@/components/ListingCard";
@@ -149,9 +149,9 @@ export default function DashboardPage() {
   const [selectedPin, setSelectedPin] = useState<ListingRow | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const handleNavigateToSettings = () => {
+  const handleNavigateToSettings = useCallback(() => {
     window.location.href = "/settings";
-  };
+  }, []);
 
   // 🔹 NEW: filter + sort state
   const [sortBy, setSortBy] = useState<SortBy>("time");
