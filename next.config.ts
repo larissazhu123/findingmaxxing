@@ -3,14 +3,18 @@ const nextConfig = {
   reactStrictMode: true,
 
   images: {
-    // Allow images from your Supabase Storage bucket
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "jtcmjgoibipkopwsvwdk.supabase.co",
-        port: "",
+        hostname: "fhqkmumdnrxxyxzrqgeh.supabase.co",
         pathname: "/storage/v1/object/public/**",
       },
+      {
+        protocol: "https",
+        hostname: "jtcmjgoibipkopwsvwdk.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
+      { protocol: "https", hostname: "images.unsplash.com" },
     ],
   },
 };
