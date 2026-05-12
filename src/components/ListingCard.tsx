@@ -44,8 +44,7 @@ export default function ListingCard({
   const categoryEmoji = CATEGORY_EMOJI_BY_ID[categoryId] || "❓";
   const categoryName = CATEGORY_NAMES[categoryId] || "Other";
 
-  // Format date
-  const formatDate = (dateString: string | null) => {
+  const formatDate = (dateString: string | null): string => {
     if (!dateString) return "Recently";
     const date = new Date(dateString);
     const now = new Date();
